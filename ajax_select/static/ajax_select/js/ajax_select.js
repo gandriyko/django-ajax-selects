@@ -14,7 +14,7 @@
           kill();
         }
         $this.val(ui.item.pk);
-        $text.val('');
+        $text.val(ui.item.repr);
         addKiller(ui.item.repr, ui.item.pk);
         $deck.trigger('added', [ui.item.pk, ui.item]);
         $this.trigger('change');
@@ -61,9 +61,19 @@
 
       $this.closest('form').on('reset', reset);
 
-      $this.bind('didAddPopup', function(event, pk, repr) {
+      $this.on('didAddPopup', function(event, pk, repr) {
         receiveResult(null, {item: {pk: pk, repr: repr}});
       });
+
+      $text.on('keyup', function() {
+        if (!$text.val())
+          $this.val('');
+      });
+
+      $text.on('dblclick', function() {
+        $text.select();
+      });
+
     });
   };
 
@@ -126,7 +136,7 @@
 
       $this.closest('form').on('reset', reset);
 
-      $this.bind('didAddPopup', function(event, pk, repr) {
+      $this.on('didAddPopup', function(event, pk, repr) {
         receiveResult(null, {item: {pk: pk, repr: repr}});
       });
     });
@@ -207,7 +217,7 @@
   window.dismissAddAnotherPopup = window.dismissAddRelatedObjectPopup;
 
   // activate any on page
-  $(window).bind('init-autocomplete', function() {
+  $(window).on('init-autocomplete', function() {
 
     $('input[data-ajax-select=autocomplete]').each(function(i, inp) {
       addAutoComplete(inp, function($inp, opts) {

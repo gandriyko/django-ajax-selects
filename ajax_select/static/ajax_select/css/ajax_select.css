@@ -1,6 +1,7 @@
 .results_on_deck .ui-icon-trash {
   float: left;
   cursor: pointer;
+  background: url("../images/delete.png") no-repeat left top !important;
 }
 .results_on_deck {
   padding: 0.25em 0;
@@ -33,6 +34,7 @@ ul.ui-autocomplete {
   margin: 0;
   padding: 0;
   position: absolute;
+  z-index: 30000 !important;
 }
 ul.ui-autocomplete li {
   list-style-type: none;

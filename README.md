@@ -1,12 +1,8 @@
-# Edit `ForeignKey`, `ManyToManyField` and `CharField` in Django Admin using jQuery UI AutoComplete.
-
-[![Build Status](https://travis-ci.org/crucialfelix/django-ajax-selects.svg?branch=master)](https://travis-ci.org/crucialfelix/django-ajax-selects) [![PyPI version](https://badge.fury.io/py/django-ajax-selects.svg)](https://badge.fury.io/py/django-ajax-selects)
+# Edit `ForeignKey`, `ManyToManyField` and `CharField`
+Forked of https://github.com/crucialfelix/django-ajax-selects
 
 ---
 
-![selecting](/docs/source/_static/kiss.png?raw=true)
-
-![selected](/docs/source/_static/kiss-all.png?raw=true)
 
 ## Documentation
 

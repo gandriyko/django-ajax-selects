@@ -32,17 +32,22 @@ except ImportError:
     # < django 1.10
     from django.core.urlresolvers import reverse
 
-as_default_help = 'Enter text to search.'
+
+as_default_help = ''
+
+as_default_plugin_options = {
+    'autoFocus': True,
+    'delay': 300,
+}
 
 
 def _media(self):
-    js = ['admin/js/jquery.init.js']
-
-    # Unless AJAX_SELECT_BOOTSTRAP == False
-    # then load include bootstrap which will load jquery and jquery ui + default css as needed
+    # unless AJAX_SELECT_BOOTSTRAP == False
+    # then load jquery and jquery ui + default css
+    # where needed
+    js = []
     if getattr(settings, "AJAX_SELECT_BOOTSTRAP", True):
         js.append('ajax_select/js/bootstrap.js')
-
     js.append('ajax_select/js/ajax_select.js')
 
     return forms.Media(css={'all': ('ajax_select/css/ajax_select.css',)}, js=js)
@@ -67,7 +72,7 @@ class AutoCompleteSelectWidget(forms.widgets.TextInput):
     def __init__(self,
                  channel,
                  help_text='',
-                 show_help_text=True,
+                 show_help_text=False,
                  plugin_options=None,
                  *args,
                  **kwargs):
@@ -93,7 +98,9 @@ class AutoCompleteSelectWidget(forms.widgets.TextInput):
             try:
                 obj = objs[0]
             except IndexError:
-                raise Exception("%s cannot find object:%s" % (lookup, value))
+                # raise Exception("%s cannot find object:%s" % (lookup, value))
+                from django.http import Http404
+                raise Http404
             current_repr = lookup.format_item_display(obj)
             initial = [current_repr, obj.pk]
 
@@ -113,7 +120,7 @@ class AutoCompleteSelectWidget(forms.widgets.TextInput):
             'add_link': self.add_link,
         }
         context.update(
-                make_plugin_options(lookup, self.channel, self.plugin_options, initial))
+            make_plugin_options(lookup, self.channel, self.plugin_options, initial))
         templates = (
             'ajax_select/autocompleteselect_%s.html' % self.channel,
             'ajax_select/autocompleteselect.html')
@@ -138,8 +145,8 @@ class AutoCompleteSelectField(forms.fields.CharField):
         widget_kwargs = dict(
                 channel=channel,
                 help_text=kwargs.get('help_text', _(as_default_help)),
-                show_help_text=kwargs.pop('show_help_text', True),
-                plugin_options=kwargs.pop('plugin_options', {})
+                show_help_text=kwargs.pop('show_help_text', False),
+                plugin_options=kwargs.pop('plugin_options', as_default_plugin_options)
         )
         widget_kwargs.update(kwargs.pop('widget_options', {}))
         kwargs["widget"] = AutoCompleteSelectWidget(**widget_kwargs)
@@ -177,6 +184,7 @@ class AutoCompleteSelectField(forms.fields.CharField):
 
 
 class AutoCompleteSelectMultipleWidget(forms.widgets.SelectMultiple):
+
     """
     Widget to select multiple models for a ManyToMany db field.
     """
@@ -188,7 +196,7 @@ class AutoCompleteSelectMultipleWidget(forms.widgets.SelectMultiple):
     def __init__(self,
                  channel,
                  help_text='',
-                 show_help_text=True,
+                 show_help_text=False,
                  plugin_options=None,
                  *args,
                  **kwargs):
@@ -309,7 +317,7 @@ class AutoCompleteSelectMultipleField(forms.fields.CharField):
             'channel': channel,
             'help_text': help_text,
             'show_help_text': show_help_text,
-            'plugin_options': kwargs.pop('plugin_options', {})
+            'plugin_options': kwargs.pop('plugin_options', as_default_plugin_options)
         }
         widget_kwargs.update(kwargs.pop('widget_options', {}))
         kwargs['widget'] = AutoCompleteSelectMultipleWidget(**widget_kwargs)
@@ -399,7 +407,7 @@ class AutoCompleteField(forms.CharField):
         widget_kwargs = dict(
                 help_text=kwargs.get('help_text', _(as_default_help)),
                 show_help_text=kwargs.pop('show_help_text', True),
-                plugin_options=kwargs.pop('plugin_options', {})
+                plugin_options=kwargs.pop('plugin_options', as_default_plugin_options)
         )
         widget_kwargs.update(kwargs.pop('widget_options', {}))
         if 'attrs' in kwargs:

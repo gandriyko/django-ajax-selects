@@ -84,6 +84,15 @@ class LookupChannel(object):
         """
         return escape(force_text(obj))
 
+    def pk_type(self, pk):
+        # Inherited models have a OneToOneField (rather than eg AutoField)
+        if getattr(self.model._meta.pk, "remote_field", False):
+            return self.model._meta.pk.remote_field.field.to_python(pk)
+        elif getattr(self.model._meta.pk, "rel", False):
+            # Use the type of the field being referenced
+            return self.model._meta.pk.rel.field.to_python(pk)
+        return self.model._meta.pk.to_python(pk)
+
     def get_objects(self, ids):
         """
         This is used to retrieve the currently selected objects for either ManyToMany or ForeignKey.
@@ -94,17 +103,17 @@ class LookupChannel(object):
             list: list of Model objects
         """
         # Inherited models have a OneToOneField (rather than eg AutoField)
-        if getattr(self.model._meta.pk, "remote_field", False):
-            # Use the type of the field being referenced (2.0+)
-            pk_type = self.model._meta.pk.remote_field.field.to_python
-        elif getattr(self.model._meta.pk, "rel", False):
-            # Use the type of the field being referenced
-            pk_type = self.model._meta.pk.rel.field.to_python
-        else:
-            pk_type = self.model._meta.pk.to_python
+        # if getattr(self.model._meta.pk, "remote_field", False):
+        #     # Use the type of the field being referenced (2.0+)
+        #     pk_type = self.model._meta.pk.remote_field.field.to_python
+        # elif getattr(self.model._meta.pk, "rel", False):
+        #     # Use the type of the field being referenced
+        #     pk_type = self.model._meta.pk.rel.field.to_python
+        # else:
+        #     pk_type = self.model._meta.pk.to_python
 
         # Return objects in the same order as passed in here
-        ids = [pk_type(pk) for pk in ids]
+        ids = [self.pk_type(pk) for pk in ids]
         things = self.model.objects.in_bulk(ids)
         return [things[aid] for aid in ids if aid in things]
 

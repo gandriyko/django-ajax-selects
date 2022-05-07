@@ -1,6 +1,7 @@
 import json
 
 from django import forms
+from django.http import Http404
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import Model
@@ -81,7 +82,6 @@ class AutoCompleteSelectWidget(forms.widgets.TextInput):
                 obj = objs[0]
             except IndexError:
                 # raise Exception(f"{lookup} cannot find object:{value}")
-                   from django.http import Http404
                 raise Http404
             current_repr = lookup.format_item_display(obj)
             initial = [current_repr, obj.pk]

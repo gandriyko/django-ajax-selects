@@ -1,12 +1,52 @@
-# Edit `ForeignKey`, `ManyToManyField` and `CharField`
-Forked of https://github.com/crucialfelix/django-ajax-selects
+# Edit `ForeignKey`, `ManyToManyField` and `CharField` in Django Admin using jQuery UI AutoComplete
+
+[![Build Status](https://travis-ci.org/crucialfelix/django-ajax-selects.svg?branch=master)](https://travis-ci.org/crucialfelix/django-ajax-selects) [![PyPI version](https://badge.fury.io/py/django-ajax-selects.svg)](https://badge.fury.io/py/django-ajax-selects)
 
 ---
 
+![selecting](/docs/source/_static/kiss.png?raw=true)
+
+![selected](/docs/source/_static/kiss-all.png?raw=true)
 
 ## Documentation
 
 http://django-ajax-selects.readthedocs.org/en/latest/
+
+## Installation
+
+`pip install django-ajax-selects`
+
+Add the app:
+
+```py
+# settings.py
+INSTALLED_APPS = (
+    ...
+    'ajax_select',  # <-   add the app
+    ...
+)
+```
+
+Include the urls in your project:
+
+```py
+# urls.py
+from django.conf.urls import url, include
+from django.conf.urls.static import static
+from django.contrib import admin
+from django.conf import settings
+from ajax_select import urls as ajax_select_urls
+
+admin.autodiscover()
+
+urlpatterns = [
+
+    # place it at whatever base url you like
+    url(r'^ajax_select/', include(ajax_select_urls)),
+
+    url(r'^admin/', include(admin.site.urls)),
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+```
 
 ## Quick Usage
 
@@ -67,24 +107,24 @@ Read the full documention here: [outside of the admin](http://django-ajax-select
 
 ## Assets included by default
 
-* //ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js
-* //code.jquery.com/ui/1.10.3/jquery-ui.js
-* //code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css
+* //ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js'
+* //code.jquery.com/ui/1.12.1/jquery-ui.js
+* //code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css
 
 ## Compatibility
 
-* Django >=1.8, <=3
-* Python >=2.7, >=3.5
+* Django >=2.2
+* Python >=3.6
 
 ## Contributors
 
 Many thanks to all contributors and pull requesters !
 
-https://github.com/crucialfelix/django-ajax-selects/graphs/contributors
+<https://github.com/crucialfelix/django-ajax-selects/graphs/contributors/>
 
 ## License
 
 Dual licensed under the MIT and GPL licenses:
 
-* http://www.opensource.org/licenses/mit-license.php
-* http://www.gnu.org/licenses/gpl.html
+* <http://www.opensource.org/licenses/mit-license.php/>
+* <http://www.gnu.org/licenses/gpl.html/>

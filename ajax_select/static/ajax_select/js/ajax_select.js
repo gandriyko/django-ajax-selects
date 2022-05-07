@@ -1,6 +1,4 @@
-(function() {
-
-  var $ = window.jQuery;
+(function($) {
 
   $.fn.autocompleteselect = function(options) {
     return this.each(function() {
@@ -201,8 +199,7 @@
   window.dismissAddRelatedObjectPopup = function(win, newId, newRepr) {
     // Iff this is an ajax-select input then close the window and
     // trigger didAddPopup
-    var name = window.windowname_to_id(win.name);
-    var input = $('#' + name);
+    var input = $('#' + win.name);
     if (input.data('ajax-select')) {
       win.close();
       // newRepr is django's repr of object
@@ -213,8 +210,6 @@
       djangoDismissAddRelatedObjectPopup(win, newId, newRepr);
     }
   }
-  // Django renamed this function in 1.8
-  window.dismissAddAnotherPopup = window.dismissAddRelatedObjectPopup;
 
   // activate any on page
   $(window).on('init-autocomplete', function() {
@@ -255,4 +250,4 @@
       });
   });
 
-})();
+})(window.jQuery);

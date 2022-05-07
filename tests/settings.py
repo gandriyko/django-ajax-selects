@@ -5,6 +5,8 @@ DATABASES = {
         "ENGINE": "django.db.backends.sqlite3",
     }
 }
+DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
+
 ROOT_URLCONF = "tests.urls"
 INSTALLED_APPS = [
     "django.contrib.auth",
@@ -55,6 +57,7 @@ TEMPLATES = [
                 'django.template.context_processors.static',
                 'django.template.context_processors.tz',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.request',
             ],
         },
     },

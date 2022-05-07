@@ -76,6 +76,8 @@ class AutoCompleteSelectWidget(forms.widgets.TextInput):
         if value:
             objs = lookup.get_objects([value])
             try:
+                if isinstance(value, Model):
+                    value = value.pk
                 obj = objs[0]
             except IndexError:
                 # raise Exception(f"{lookup} cannot find object:{value}")

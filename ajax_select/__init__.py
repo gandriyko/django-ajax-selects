@@ -1,4 +1,5 @@
 """JQuery-Ajax Autocomplete fields for Django Forms."""
+
 __version__ = "2.2.1"
 __author__ = "crucialfelix"
 __contact__ = "crucialfelix@gmail.com"

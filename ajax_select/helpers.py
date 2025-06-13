@@ -5,7 +5,9 @@ from django.utils.text import capfirst
 from django.utils.translation import gettext_lazy as _
 
 
-def make_ajax_form(model, fieldlist, superclass=ModelForm, show_help_text=False, **kwargs):
+def make_ajax_form(
+    model, fieldlist, superclass=ModelForm, show_help_text=False, **kwargs
+):
     """Creates a ModelForm subclass with AutoComplete fields.
 
     Args:
@@ -37,22 +39,22 @@ def make_ajax_form(model, fieldlist, superclass=ModelForm, show_help_text=False,
     """
     # will support previous arg name for several versions before deprecating
     # TODO: time to go
-    if 'show_m2m_help' in kwargs:
-        show_help_text = kwargs.pop('show_m2m_help')
+    if "show_m2m_help" in kwargs:
+        show_help_text = kwargs.pop("show_m2m_help")
 
     class TheForm(superclass):
 
         class Meta:
             exclude = []
 
-        setattr(Meta, 'model', model)
-        if hasattr(superclass, 'Meta'):
-            if hasattr(superclass.Meta, 'fields'):
-                setattr(Meta, 'fields', superclass.Meta.fields)
-            if hasattr(superclass.Meta, 'exclude'):
-                setattr(Meta, 'exclude', superclass.Meta.exclude)
-            if hasattr(superclass.Meta, 'widgets'):
-                setattr(Meta, 'widgets', superclass.Meta.widgets)
+        setattr(Meta, "model", model)
+        if hasattr(superclass, "Meta"):
+            if hasattr(superclass.Meta, "fields"):
+                setattr(Meta, "fields", superclass.Meta.fields)
+            if hasattr(superclass.Meta, "exclude"):
+                setattr(Meta, "exclude", superclass.Meta.exclude)
+            if hasattr(superclass.Meta, "widgets"):
+                setattr(Meta, "widgets", superclass.Meta.widgets)
 
     for model_fieldname, channel in fieldlist.items():
         f = make_ajax_field(model, model_fieldname, channel, show_help_text)
@@ -63,7 +65,9 @@ def make_ajax_form(model, fieldlist, superclass=ModelForm, show_help_text=False,
     return TheForm
 
 
-def make_ajax_field(related_model, fieldname_on_model, channel, show_help_text=False, **kwargs):
+def make_ajax_field(
+    related_model, fieldname_on_model, channel, show_help_text=False, **kwargs
+):
     """Makes an AutoComplete field for use in a Form.
 
     Args:
@@ -83,30 +87,26 @@ def make_ajax_field(related_model, fieldname_on_model, channel, show_help_text=F
     Returns:
         (AutoCompleteField, AutoCompleteSelectField, AutoCompleteSelectMultipleField): field
     """
-    from ajax_select.fields import AutoCompleteField, \
-        AutoCompleteSelectMultipleField, \
-        AutoCompleteSelectField
+    from ajax_select.fields import (
+        AutoCompleteField,
+        AutoCompleteSelectMultipleField,
+        AutoCompleteSelectField,
+    )
 
     field = related_model._meta.get_field(fieldname_on_model)
-    if 'label' not in kwargs:
-        kwargs['label'] = _(capfirst(force_str(field.verbose_name)))
+    if "label" not in kwargs:
+        kwargs["label"] = _(capfirst(force_str(field.verbose_name)))
 
-    if ('help_text' not in kwargs) and field.help_text:
-        kwargs['help_text'] = field.help_text
-    if 'required' not in kwargs:
-        kwargs['required'] = not field.blank
+    if ("help_text" not in kwargs) and field.help_text:
+        kwargs["help_text"] = field.help_text
+    if "required" not in kwargs:
+        kwargs["required"] = not field.blank
 
-    kwargs['show_help_text'] = show_help_text
+    kwargs["show_help_text"] = show_help_text
     if isinstance(field, ManyToManyField):
-        f = AutoCompleteSelectMultipleField(
-                channel,
-                **kwargs)
+        f = AutoCompleteSelectMultipleField(channel, **kwargs)
     elif isinstance(field, ForeignKey):
-        f = AutoCompleteSelectField(
-                channel,
-                **kwargs)
+        f = AutoCompleteSelectField(channel, **kwargs)
     else:
-        f = AutoCompleteField(
-                channel,
-                **kwargs)
+        f = AutoCompleteField(channel, **kwargs)
     return f

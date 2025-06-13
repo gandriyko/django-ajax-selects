@@ -104,7 +104,12 @@ class LookupChannel:
             pk_type = self.model._meta.pk.to_python
 
         # Return objects in the same order as passed in here
-        ids = [pk_type(pk) for pk in ids]
+        try:
+            ids = [pk_type(pk) for pk in ids]
+        except Exception:
+            print(f"django-ajax-selects: Validation error for {ids}")
+            ids = []
+
         things = self.model.objects.in_bulk(ids)
         return [things[aid] for aid in ids if aid in things]
 
@@ -122,6 +127,7 @@ class LookupChannel:
             bool
         """
         from django.contrib.contenttypes.models import ContentType
+
         ctype = ContentType.objects.get_for_model(other_model)
         return user.has_perm(f"{ctype.app_label}.add_{ctype.model}")
 

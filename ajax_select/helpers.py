@@ -5,10 +5,9 @@ from django.utils.text import capfirst
 from django.utils.translation import gettext_lazy as _
 
 
-def make_ajax_form(
-    model, fieldlist, superclass=ModelForm, show_help_text=False, **kwargs
-):
-    """Creates a ModelForm subclass with AutoComplete fields.
+def make_ajax_form(model, fieldlist, superclass=ModelForm, show_help_text=False, **kwargs):
+    """
+    Creates a ModelForm subclass with AutoComplete fields.
 
     Args:
         model (type): Model class for which you are making the ModelForm
@@ -43,18 +42,17 @@ def make_ajax_form(
         show_help_text = kwargs.pop("show_m2m_help")
 
     class TheForm(superclass):
-
         class Meta:
             exclude = []
 
-        setattr(Meta, "model", model)
+        Meta.model = model
         if hasattr(superclass, "Meta"):
             if hasattr(superclass.Meta, "fields"):
-                setattr(Meta, "fields", superclass.Meta.fields)
+                Meta.fields = superclass.Meta.fields
             if hasattr(superclass.Meta, "exclude"):
-                setattr(Meta, "exclude", superclass.Meta.exclude)
+                Meta.exclude = superclass.Meta.exclude
             if hasattr(superclass.Meta, "widgets"):
-                setattr(Meta, "widgets", superclass.Meta.widgets)
+                Meta.widgets = superclass.Meta.widgets
 
     for model_fieldname, channel in fieldlist.items():
         f = make_ajax_field(model, model_fieldname, channel, show_help_text)
@@ -65,10 +63,9 @@ def make_ajax_form(
     return TheForm
 
 
-def make_ajax_field(
-    related_model, fieldname_on_model, channel, show_help_text=False, **kwargs
-):
-    """Makes an AutoComplete field for use in a Form.
+def make_ajax_field(related_model, fieldname_on_model, channel, show_help_text=False, **kwargs):
+    """
+    Makes an AutoComplete field for use in a Form.
 
     Args:
         related_model (Model): model of the related object
@@ -86,12 +83,9 @@ def make_ajax_field(
 
     Returns:
         (AutoCompleteField, AutoCompleteSelectField, AutoCompleteSelectMultipleField): field
+
     """
-    from ajax_select.fields import (
-        AutoCompleteField,
-        AutoCompleteSelectMultipleField,
-        AutoCompleteSelectField,
-    )
+    from ajax_select.fields import AutoCompleteField, AutoCompleteSelectField, AutoCompleteSelectMultipleField
 
     field = related_model._meta.get_field(fieldname_on_model)
     if "label" not in kwargs:

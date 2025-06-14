@@ -20,13 +20,9 @@ class AjaxSelectAdminInlineFormsetMixin:
         return fs
 
 
-class AjaxSelectAdminTabularInline(
-    AjaxSelectAdminInlineFormsetMixin, admin.TabularInline
-):
+class AjaxSelectAdminTabularInline(AjaxSelectAdminInlineFormsetMixin, admin.TabularInline):
     pass
 
 
-class AjaxSelectAdminStackedInline(
-    AjaxSelectAdminInlineFormsetMixin, admin.StackedInline
-):
+class AjaxSelectAdminStackedInline(AjaxSelectAdminInlineFormsetMixin, admin.StackedInline):
     pass
